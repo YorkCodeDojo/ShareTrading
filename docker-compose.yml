@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  sharetradingapi:
+    image: ${DOCKER_REGISTRY}sharetradingapi
+    build:
+      context: .
+      dockerfile: ShareTradingAPI\Dockerfile
