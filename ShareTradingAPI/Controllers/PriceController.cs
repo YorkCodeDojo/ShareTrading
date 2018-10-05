@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShareTradingAPI.Queries;
+using ShareTradingAPI.DataAccess;
 using ShareTradingAPI.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -17,6 +17,7 @@ namespace ShareTradingAPI.Controllers
             _currentPriceQuery = currentPriceQuery;
         }
 
+        [HttpGet]
         public async Task<ActionResult<Price>> Get()
         {
             var currentPrice = await _currentPriceQuery.Evaluate();

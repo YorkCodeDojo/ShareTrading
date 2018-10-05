@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ShareTradingAPI.ViewModels;
 
-namespace ShareTradingAPI.Queries
+namespace ShareTradingAPI.DataAccess
 {
     public interface IStoreTransactionAction
     {

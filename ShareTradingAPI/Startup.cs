@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ShareTradingAPI
 {
@@ -26,6 +27,18 @@ namespace ShareTradingAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddSingleton(new DataAccess.SQLServer.SQLServerDatabaseConnection(connectionString));
+
+            services.AddTransient<DataAccess.ICreateOrUpdateAccountAction, DataAccess.SQLServer.CreateOrUpdateAccountAction>();
+            services.AddTransient<DataAccess.IAccountQuery, DataAccess.SQLServer.AccountQuery>();
+            services.AddTransient<DataAccess.ITransactionsForAccountQuery, DataAccess.SQLServer.TransactionsForAccountQuery>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "ShareTrading API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +52,13 @@ namespace ShareTradingAPI
             {
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShareTrading API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();

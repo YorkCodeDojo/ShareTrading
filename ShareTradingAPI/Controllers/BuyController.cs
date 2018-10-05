@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShareTradingAPI.Queries;
+using ShareTradingAPI.DataAccess;
 using ShareTradingAPI.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -12,10 +12,10 @@ namespace ShareTradingAPI.Controllers
     {
         readonly IAccountQuery _accountQuery;
         readonly ICurrentPriceQuery _currentPriceQuery;
-        readonly IUpdateAccountAction _updateAccountAction;
+        readonly ICreateOrUpdateAccountAction _updateAccountAction;
         readonly IStoreTransactionAction _storeTransactionAction;
 
-        public BuyController(IAccountQuery accountQuery, ICurrentPriceQuery currentPriceQuery, IUpdateAccountAction updateAccountAction, IStoreTransactionAction storeTransactionAction)
+        public BuyController(IAccountQuery accountQuery, ICurrentPriceQuery currentPriceQuery, ICreateOrUpdateAccountAction updateAccountAction, IStoreTransactionAction storeTransactionAction)
         {
             _accountQuery = accountQuery;
             _currentPriceQuery = currentPriceQuery;

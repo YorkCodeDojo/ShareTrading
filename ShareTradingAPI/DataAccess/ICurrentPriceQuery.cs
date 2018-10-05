@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ShareTradingAPI.Queries
+namespace ShareTradingAPI.DataAccess
 {
     public interface ICurrentPriceQuery
     {
