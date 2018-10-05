@@ -8,18 +8,16 @@ namespace ShareTradingAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BuyController : ControllerBase
+    public class PurchasesController : ControllerBase
     {
         readonly IAccountQuery _accountQuery;
         readonly ICurrentPriceQuery _currentPriceQuery;
-        readonly ICreateOrUpdateAccountAction _updateAccountAction;
         readonly IStoreTransactionAction _storeTransactionAction;
 
-        public BuyController(IAccountQuery accountQuery, ICurrentPriceQuery currentPriceQuery, ICreateOrUpdateAccountAction updateAccountAction, IStoreTransactionAction storeTransactionAction)
+        public PurchasesController(IAccountQuery accountQuery, ICurrentPriceQuery currentPriceQuery, IStoreTransactionAction storeTransactionAction)
         {
             _accountQuery = accountQuery;
             _currentPriceQuery = currentPriceQuery;
-            _updateAccountAction = updateAccountAction;
             _storeTransactionAction = storeTransactionAction;
         }
 
@@ -27,7 +25,7 @@ namespace ShareTradingAPI.Controllers
         public async Task<ActionResult<Purchase>> Buy([FromBody] BuyRequest buyRequest)
         {
             var account = await _accountQuery.Evaluate(buyRequest.AccountNumber);
-            var currentPrice = await _currentPriceQuery.Evaluate();
+            var currentPrice = await _currentPriceQuery.Evaluate(buyRequest.ProductCode);
 
             if (currentPrice > buyRequest.MaxCost)
             {
@@ -38,28 +36,27 @@ namespace ShareTradingAPI.Controllers
                 };
             }
 
+            var availableCash = account.OpeningCash + account.TotalFromTransactions;
             var totalCost = currentPrice * buyRequest.Quantity;
 
-            if (totalCost > account.Cash)
+            if (totalCost > availableCash)
             {
                 return new Purchase()
                 {
-                    Message = $"The trade will cost {totalCost} but you only have {account.Cash}.",
+                    Message = $"The trade will cost {totalCost} but you only have {availableCash}.",
                     Success = false,
                 };
             }
-
-            account.Cash -= totalCost;
-            account.SharesHeld += buyRequest.Quantity;
-            await _updateAccountAction.Execute(account);
 
             var transaction = new Transaction()
             {
                 AccountNumber = account.AccountNumber,
                 Quantity = buyRequest.Quantity,
                 Time = DateTime.Now,
-                UnitCost = currentPrice,
-                TotalCost = totalCost
+                UnitPrice = currentPrice,
+                TotalValue = -totalCost,
+                ProductCode = buyRequest.ProductCode,
+                ID = Guid.NewGuid()
             };
             await _storeTransactionAction.Execute(transaction);
 
@@ -67,9 +64,11 @@ namespace ShareTradingAPI.Controllers
             {
                 Message = "Success",
                 Quantity = buyRequest.Quantity,
+                ProductCode = buyRequest.ProductCode,
                 Success = true,
-                TotalCost = totalCost,
-                UnitCost = currentPrice
+                TotalValue = totalCost,
+                UnitPrice = currentPrice,
+                TransactionID = transaction.ID
             };
         }
 

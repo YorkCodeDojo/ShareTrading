@@ -6,10 +6,10 @@ using ShareTradingAPI.ViewModels;
 
 namespace ShareTradingAPI.DataAccess.SQLServer
 {
-    public class CreateOrUpdateAccountAction : ICreateOrUpdateAccountAction
+    public class CreateAccountAction : ICreateAccountAction
     {
         readonly SQLServerDatabaseConnection  _sqlServerDatabaseConnection;
-        public CreateOrUpdateAccountAction(SQLServerDatabaseConnection sqlServerDatabaseConnection)
+        public CreateAccountAction(SQLServerDatabaseConnection sqlServerDatabaseConnection)
         {
             _sqlServerDatabaseConnection = sqlServerDatabaseConnection;
         }
@@ -23,11 +23,10 @@ namespace ShareTradingAPI.DataAccess.SQLServer
                 {
                     cmd.Connection = cn;
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "dbo.usp_CreateOrUpdateAccount";
+                    cmd.CommandText = "dbo.usp_CreateAccount";
                     cmd.Parameters.Add("@AccountNumber", SqlDbType.UniqueIdentifier).Value = account.AccountNumber;
                     cmd.Parameters.Add("@AccountName", SqlDbType.NVarChar, 100).Value = account.AccountName;
-                    cmd.Parameters.Add("@Cash", SqlDbType.Int).Value = account.Cash;
-                    cmd.Parameters.Add("@SharesHeld", SqlDbType.Int).Value = account.SharesHeld;
+                    cmd.Parameters.Add("@OpeningCash", SqlDbType.Int).Value = account.OpeningCash;
 
                     await cmd.ExecuteNonQueryAsync();
                 }

@@ -2,9 +2,10 @@
 
 namespace ShareTradingAPI.ViewModels
 {
-    public class Price
+    public class Product
     {
-        public int UnitCost { get; set; }
+        public string ProductCode { get; set; }
+        public int CurrentUnitCost { get; set; }
         public DateTime Time { get; set; }
     }
 }

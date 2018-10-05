@@ -9,13 +9,13 @@ namespace ShareTradingAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         readonly IAccountQuery _accountQuery;
-        readonly ICreateOrUpdateAccountAction _updateAccountAction;
+        readonly ICreateAccountAction _updateAccountAction;
         readonly ITransactionsForAccountQuery _transactionQuery;
 
-        public AccountController(IAccountQuery accountQuery, ICreateOrUpdateAccountAction updateAccountAction, ITransactionsForAccountQuery transactionQuery)
+        public AccountsController(IAccountQuery accountQuery, ICreateAccountAction updateAccountAction, ITransactionsForAccountQuery transactionQuery)
         {
             _accountQuery = accountQuery;
             _updateAccountAction = updateAccountAction;
@@ -44,8 +44,9 @@ namespace ShareTradingAPI.Controllers
             {
                 AccountName = newAccountRequest.AccountName,
                 AccountNumber = Guid.NewGuid(),
-                Cash = 10000,
-                SharesHeld = 0
+                OpeningCash = 10000,
+                Portfolio = new List<Investment>(),
+                TotalFromTransactions = 0
             };
 
             await _updateAccountAction.Execute(account);

@@ -8,7 +8,8 @@ namespace ShareTradingAPI.ViewModels
         public Guid AccountNumber { get; internal set; }
         public int Quantity { get; internal set; }
         public object Time { get; internal set; }
-        public int UnitCost { get; internal set; }
-        public int TotalCost { get; internal set; }
+        public int UnitPrice { get; internal set; }
+        public int TotalValue { get; internal set; }
+        public string ProductCode { get; internal set; }
     }
 }

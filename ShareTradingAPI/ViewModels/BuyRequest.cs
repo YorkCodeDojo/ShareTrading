@@ -7,6 +7,8 @@ namespace ShareTradingAPI.ViewModels
     {
         public Guid AccountNumber { get; set; }
 
+        public string ProductCode { get; set; }
+
         [Range(0, int.MaxValue)]
         public int Quantity { get; set; }
 

@@ -40,8 +40,9 @@ namespace ShareTradingAPI.DataAccess.SQLServer
                                 ID = (Guid)dr["ID"],
                                 Quantity = (int)dr["Quantity"],
                                 Time = (DateTime)dr["DateAndTime"],
-                                TotalCost = (int)dr["TotalCost"],
-                                UnitCost = (int)dr["UnitCost"]
+                                TotalValue = (int)dr["TotalValue"],
+                                UnitPrice = (int)dr["UnitPrice"],
+                                ProductCode = (string)dr["ProductCode"],
                             });
                         }
                         return result;

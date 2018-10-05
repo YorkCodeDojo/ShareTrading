@@ -31,7 +31,7 @@ namespace ShareTradingAPI
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddSingleton(new DataAccess.SQLServer.SQLServerDatabaseConnection(connectionString));
 
-            services.AddTransient<DataAccess.ICreateOrUpdateAccountAction, DataAccess.SQLServer.CreateOrUpdateAccountAction>();
+            services.AddTransient<DataAccess.ICreateAccountAction, DataAccess.SQLServer.CreateAccountAction>();
             services.AddTransient<DataAccess.IAccountQuery, DataAccess.SQLServer.AccountQuery>();
             services.AddTransient<DataAccess.ITransactionsForAccountQuery, DataAccess.SQLServer.TransactionsForAccountQuery>();
 

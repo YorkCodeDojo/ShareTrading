@@ -3,7 +3,7 @@ using ShareTradingAPI.ViewModels;
 
 namespace ShareTradingAPI.DataAccess
 {
-    public interface ICreateOrUpdateAccountAction
+    public interface ICreateAccountAction
     {
         Task Execute(AccountDetails account);
     }
