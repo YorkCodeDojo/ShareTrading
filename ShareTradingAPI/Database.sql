@@ -1,4 +1,10 @@
-﻿CREATE DATABASE ShareTrading
+﻿--USE master
+--GO
+
+--DROP DATABASE ShareTrading
+--GO
+
+CREATE DATABASE ShareTrading
 GO
 
 USE ShareTrading
@@ -13,21 +19,74 @@ CONSTRAINT pk_Accounts PRIMARY KEY (AccountNumber)
 )
 GO
 
-CREATE TABLE dbo.ShareTransaction
+CREATE TABLE dbo.Products
+(
+	ID					INT					NOT NULL,
+	ProductCode			VARCHAR(100)		NOT NULL
+CONSTRAINT pk_Products PRIMARY KEY (ID)
+)
+GO
+
+INSERT INTO dbo.Products (ID, ProductCode) SELECT 1, 'ProductA'
+GO
+INSERT INTO dbo.Products (ID, ProductCode) SELECT 2, 'ProductB'
+GO
+INSERT INTO dbo.Products (ID, ProductCode) SELECT 3, 'ProductC'
+GO
+
+CREATE TABLE dbo.ProductPrices
+(
+	ProductID			INT					NOT NULL,
+	Minutes				INT					NOT NULL,
+	Price				INT					NOT NULL,
+CONSTRAINT pk_ProductPrices PRIMARY KEY (ProductID),
+CONSTRAINT fk_ProductPrices_ProductCode FOREIGN KEY (ProductID) REFERENCES dbo.Products(ID)
+)
+GO
+
+CREATE TABLE dbo.ShareTransactions
 (
 	ID					UNIQUEIDENTIFIER	NOT NULL,
 	AccountNumber		UNIQUEIDENTIFIER	NOT NULL,
-	ProductCode			VARCHAR(100)		NOT NULL,
+	ProductID			INT					NOT NULL,
 	Quantity			INT					NOT NULL,
 	DateAndTime			DATETIME2(7)		NOT NULL,
 	UnitPrice			INT					NOT NULL,
 	TotalValue			INT					NOT NULL,
-CONSTRAINT  pk_ShareTransaction  PRIMARY KEY NONCLUSTERED (ID),
-CONSTRAINT fk_ShareTransaction_AccountNumbre FOREIGN KEY (AccountNumber) REFERENCES dbo.Accounts(AccountNumber)
+CONSTRAINT  pk_ShareTransactions  PRIMARY KEY NONCLUSTERED (ID),
+CONSTRAINT fk_ShareTransactions_AccountNumber FOREIGN KEY (AccountNumber) REFERENCES dbo.Accounts(AccountNumber),
+CONSTRAINT fk_ShareTransactions_ProductCode FOREIGN KEY (ProductID) REFERENCES dbo.Products(ID)
 )
 GO
 
-CREATE CLUSTERED INDEX [ind_ShareTransaction+AccountNumber] ON dbo.ShareTransaction(AccountNumber)
+CREATE CLUSTERED INDEX [ind_ShareTransactions+AccountNumber] ON dbo.ShareTransactions(AccountNumber)
+GO
+CREATE INDEX [ind_ShareTransactions+ProductID] ON dbo.ShareTransactions(ProductID)
+GO
+
+
+CREATE PROCEDURE dbo.usp_GetProducts AS
+BEGIN
+
+	SET NOCOUNT ON
+
+	SELECT P.ProductCode
+	  FROM dbo.Products P
+	ORDER BY P.ProductCode
+END
+GO
+
+CREATE PROCEDURE dbo.usp_GetProduct(@ProductCode AS VARCHAR(100), @Minutes AS INT) AS
+BEGIN
+
+	SET NOCOUNT ON
+
+	SELECT P.ProductCode,
+	       PP.Price
+	  FROM dbo.Products P
+ LEFT JOIN dbo.ProductPrices PP ON P.ID = PP.ProductID AND PP.Minutes = @Minutes
+	 WHERE P.ProductCode = @ProductCode
+END
 GO
 
 CREATE PROCEDURE dbo.usp_CreateAccount(@AccountNumber		UNIQUEIDENTIFIER,
@@ -54,13 +113,14 @@ BEGIN
 	WHERE A.AccountNumber = @AccountNumber
 
    SELECT SUM(ST.Quantity) AS CurrentQuantity,
-		  ST.ProductCode
-	 FROM dbo.ShareTransaction ST
+		  P.ProductCode
+	 FROM dbo.ShareTransactions ST
+	 JOIN dbo.Products P ON P.ID = ST.ProductID
 	WHERE ST.AccountNumber = @AccountNumber
 	GROUP BY ProductCode
 	  
    SELECT IsNull(SUM(ST.TotalValue),0) AS TotalFromTransactions
-	 FROM dbo.ShareTransaction ST
+	 FROM dbo.ShareTransactions ST
 	WHERE ST.AccountNumber = @AccountNumber
 
 END
@@ -78,10 +138,31 @@ BEGIN
 		  ST.Quantity,
 		  ST.TotalValue,
 		  ST.UnitPrice,
-		  ST.ProductCode
-	 FROM dbo.ShareTransaction ST
+		  P.ProductCode
+	 FROM dbo.ShareTransactions ST
+	 JOIN dbo.Products P ON P.ID = ST.ProductID
 	WHERE ST.AccountNumber = @AccountNumber
 	ORDER BY ST.ID
+
+END
+GO
+
+
+CREATE PROCEDURE dbo.usp_CreateTransaction(@AccountNumber		UNIQUEIDENTIFIER,
+										   @DateAndTime			DATETIME2(7),
+										   @ID					UNIQUEIDENTIFIER,
+										   @ProductCode			VARCHAR(100),
+										   @Quantity			INT,
+										   @TotalValue			INT,
+										   @UnitPrice			INT) AS
+BEGIN
+	
+	SET NOCOUNT ON
+
+	INSERT INTO dbo.ShareTransactions(AccountNumber, DateAndTime, ID, ProductID, Quantity, TotalValue, UnitPrice)
+	SELECT @AccountNumber, @DateAndTime, @ID, P.ID, @Quantity, @TotalValue, @UnitPrice
+	 FROM dbo.Products P 
+	WHERE P.ProductCode = @ProductCode
 
 END
 GO

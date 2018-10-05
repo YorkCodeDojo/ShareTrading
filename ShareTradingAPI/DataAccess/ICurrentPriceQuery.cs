@@ -4,6 +4,6 @@ namespace ShareTradingAPI.DataAccess
 {
     public interface ICurrentPriceQuery
     {
-        Task<int> Evaluate(string productCode);
+        Task<int> Evaluate(string productCode, int minutes);
     }
 }

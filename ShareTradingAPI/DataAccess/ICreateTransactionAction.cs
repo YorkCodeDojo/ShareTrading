@@ -3,7 +3,7 @@ using ShareTradingAPI.ViewModels;
 
 namespace ShareTradingAPI.DataAccess
 {
-    public interface IStoreTransactionAction
+    public interface ICreateTransactionAction
     {
         Task Execute(Transaction transaction);
     }

@@ -12,9 +12,9 @@ namespace ShareTradingAPI.Controllers
     {
         readonly IAccountQuery _accountQuery;
         readonly ICurrentPriceQuery _currentPriceQuery;
-        readonly IStoreTransactionAction _storeTransactionAction;
+        readonly ICreateTransactionAction _storeTransactionAction;
 
-        public PurchasesController(IAccountQuery accountQuery, ICurrentPriceQuery currentPriceQuery, IStoreTransactionAction storeTransactionAction)
+        public PurchasesController(IAccountQuery accountQuery, ICurrentPriceQuery currentPriceQuery, ICreateTransactionAction storeTransactionAction)
         {
             _accountQuery = accountQuery;
             _currentPriceQuery = currentPriceQuery;
@@ -25,7 +25,11 @@ namespace ShareTradingAPI.Controllers
         public async Task<ActionResult<Purchase>> Buy([FromBody] BuyRequest buyRequest)
         {
             var account = await _accountQuery.Evaluate(buyRequest.AccountNumber);
-            var currentPrice = await _currentPriceQuery.Evaluate(buyRequest.ProductCode);
+            if (account == null) return NotFound("Account does not exist");
+
+            var currentPrice = await _currentPriceQuery.Evaluate(buyRequest.ProductCode,0);
+            if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.ProductDoesNotExist) return NotFound("Product does not exist");
+            if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.PriceDoesNotExist) return BadRequest("No valid price");
 
             if (currentPrice > buyRequest.MaxCost)
             {

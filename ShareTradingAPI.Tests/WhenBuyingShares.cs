@@ -8,26 +8,35 @@ using Xunit;
 
 namespace ShareTradingAPI.Tests
 {
-    public class WhenGettingTransactions : IClassFixture<WebApplicationFactory<Startup>>
+    public class WhenBuyingShares : IClassFixture<WebApplicationFactory<Startup>>
     {
         readonly WebApplicationFactory<Startup> _factory;
 
-        public WhenGettingTransactions(WebApplicationFactory<Startup> factory)
+        public WhenBuyingShares(WebApplicationFactory<Startup> factory)
         {
             _factory = factory;
         }
 
         [Fact]
-        public async Task For_A_New_Account_Then_No_Data_Will_Be_Returned()
+        public async Task A_Transaction_Will_Be_Created()
         {
             var client = _factory.CreateDefaultClient();
 
             var createdAccountDetails = await CreateAccount(client);
 
-            var response = await client.GetAsync($"/api/Accounts/{createdAccountDetails.AccountNumber}/Transactions");
-            var transactions = await response.Content.ReadAsJsonAsync<IEnumerable<Transaction>>();
+            var requestData = new BuyRequest()
+            {
+                AccountNumber = createdAccountDetails.AccountNumber,
+                MaxCost = 50,
+                ProductCode = Constants.ProductA,
+                Quantity = 10
+            };
 
-            Assert.Empty(transactions);
+            var response = await client.PostAsJsonAsync("/api/Purchases", requestData);
+            response.EnsureSuccessStatusCode();
+            var responseData = await response.Content.ReadAsJsonAsync<Purchase>();
+
+            Assert.True(responseData.Success);
 
         }
 
