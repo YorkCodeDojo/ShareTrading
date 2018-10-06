@@ -78,5 +78,6 @@ namespace ShareTradingAPI.Tests
 
             Assert.Equal(0, responseData.TotalFromTransactions);
         }
+
     }
 }

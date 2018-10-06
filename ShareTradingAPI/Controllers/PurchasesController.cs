@@ -31,12 +31,14 @@ namespace ShareTradingAPI.Controllers
             if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.ProductDoesNotExist) return NotFound("Product does not exist");
             if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.PriceDoesNotExist) return BadRequest("No valid price");
 
-            if (currentPrice > buyRequest.MaxCost)
+            if (currentPrice > buyRequest.MaxUnitPrice)
             {
                 return new Purchase()
                 {
-                    Message = $"The current price of {currentPrice} is higher then the maximum you specified of {buyRequest.MaxCost}.",
+                    ProductCode = buyRequest.ProductCode,
+                    Message = $"The current price of {currentPrice} is higher then the maximum you specified of {buyRequest.MaxUnitPrice}.",
                     Success = false,
+                    UnitPrice = currentPrice,
                 };
             }
 
@@ -47,8 +49,10 @@ namespace ShareTradingAPI.Controllers
             {
                 return new Purchase()
                 {
+                    ProductCode = buyRequest.ProductCode,
                     Message = $"The trade will cost {totalCost} but you only have {availableCash}.",
                     Success = false,
+                    UnitPrice = currentPrice,
                 };
             }
 

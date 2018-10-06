@@ -32,12 +32,14 @@ namespace ShareTradingAPI.Controllers
             if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.ProductDoesNotExist) return NotFound("Product does not exist");
             if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.PriceDoesNotExist) return BadRequest("No valid price");
 
-            if (currentPrice < sellRequest.MinCost)
+            if (currentPrice < sellRequest.MinUnitPrice)
             {
                 return new Sale()
                 {
-                    Message = $"The current price of {currentPrice} is lower than the minimum you specified of {sellRequest.MinCost}.",
+                    UnitPrice = currentPrice,
+                    Message = $"The current price of {currentPrice} is lower than the minimum you specified of {sellRequest.MinUnitPrice}.",
                     Success = false,
+                    ProductCode = sellRequest.ProductCode,
                 };
             }
 
@@ -49,8 +51,10 @@ namespace ShareTradingAPI.Controllers
             {
                 return new Sale()
                 {
+                    UnitPrice = currentPrice,
                     Message = $"You have requested to sell {sellRequest.Quantity} but you only have {sharesCurrentlyHeld}.",
                     Success = false,
+                    ProductCode = sellRequest.ProductCode,
                 };
             }
 

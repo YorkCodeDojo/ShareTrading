@@ -9,7 +9,7 @@ namespace ShareTradingAPI.ViewModels
         public int UnitPrice { get; set; }
         public int TotalValue { get; set; }
         public string Message { get; set; }
-        public string ProductCode { get; internal set; }
-        public Guid TransactionID { get; internal set; }
+        public string ProductCode { get; set; }
+        public Guid TransactionID { get; set; }
     }
 }

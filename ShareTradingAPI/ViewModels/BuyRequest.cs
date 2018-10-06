@@ -13,6 +13,6 @@ namespace ShareTradingAPI.ViewModels
         public int Quantity { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int MaxCost { get; set; }
+        public int MaxUnitPrice { get; set; }
     }
 }

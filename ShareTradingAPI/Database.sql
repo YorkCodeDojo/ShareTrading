@@ -44,6 +44,11 @@ CONSTRAINT fk_ProductPrices_ProductCode FOREIGN KEY (ProductID) REFERENCES dbo.P
 )
 GO
 
+INSERT INTO dbo.ProductPrices (ProductID, Minutes, Price)
+SELECT ID,0,123
+FROM dbo.Products
+GO
+
 CREATE TABLE dbo.ShareTransactions
 (
 	ID					UNIQUEIDENTIFIER	NOT NULL,
@@ -142,7 +147,7 @@ BEGIN
 	 FROM dbo.ShareTransactions ST
 	 JOIN dbo.Products P ON P.ID = ST.ProductID
 	WHERE ST.AccountNumber = @AccountNumber
-	ORDER BY ST.ID
+	ORDER BY ST.DateAndTime
 
 END
 GO
