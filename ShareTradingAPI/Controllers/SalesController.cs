@@ -28,9 +28,9 @@ namespace ShareTradingAPI.Controllers
             var account = await _accountQuery.Evaluate(sellRequest.AccountNumber);
             if (account == null) return NotFound("Account does not exist");
 
-            var currentPrice = await _currentPriceQuery.Evaluate(sellRequest.ProductCode, 0);
-            if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.ProductDoesNotExist) return NotFound("Product does not exist");
-            if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.PriceDoesNotExist) return BadRequest("No valid price");
+            var currentPrice = await _currentPriceQuery.Evaluate(sellRequest.ProductCode);
+            if (currentPrice == DataAccess.CurrentPriceQuery.ErrorConditions.ProductDoesNotExist) return NotFound("Product does not exist");
+            if (currentPrice == DataAccess.CurrentPriceQuery.ErrorConditions.PriceDoesNotExist) return BadRequest("No valid price");
 
             if (currentPrice < sellRequest.MinUnitPrice)
             {

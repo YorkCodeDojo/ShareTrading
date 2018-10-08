@@ -2,7 +2,7 @@
 
 namespace ShareTradingAPI.ViewModels
 {
-    public class Product
+    public class Price
     {
         public string ProductCode { get; set; }
         public int CurrentUnitCost { get; set; }

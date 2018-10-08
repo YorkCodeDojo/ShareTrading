@@ -33,20 +33,7 @@ INSERT INTO dbo.Products (ID, ProductCode) SELECT 2, 'ProductB'
 GO
 INSERT INTO dbo.Products (ID, ProductCode) SELECT 3, 'ProductC'
 GO
-
-CREATE TABLE dbo.ProductPrices
-(
-	ProductID			INT					NOT NULL,
-	Minutes				INT					NOT NULL,
-	Price				INT					NOT NULL,
-CONSTRAINT pk_ProductPrices PRIMARY KEY (ProductID),
-CONSTRAINT fk_ProductPrices_ProductCode FOREIGN KEY (ProductID) REFERENCES dbo.Products(ID)
-)
-GO
-
-INSERT INTO dbo.ProductPrices (ProductID, Minutes, Price)
-SELECT ID,0,123
-FROM dbo.Products
+INSERT INTO dbo.Products (ID, ProductCode) SELECT 4, 'ProductD'
 GO
 
 CREATE TABLE dbo.ShareTransactions
@@ -67,31 +54,6 @@ GO
 CREATE CLUSTERED INDEX [ind_ShareTransactions+AccountNumber] ON dbo.ShareTransactions(AccountNumber)
 GO
 CREATE INDEX [ind_ShareTransactions+ProductID] ON dbo.ShareTransactions(ProductID)
-GO
-
-
-CREATE PROCEDURE dbo.usp_GetProducts AS
-BEGIN
-
-	SET NOCOUNT ON
-
-	SELECT P.ProductCode
-	  FROM dbo.Products P
-	ORDER BY P.ProductCode
-END
-GO
-
-CREATE PROCEDURE dbo.usp_GetProduct(@ProductCode AS VARCHAR(100), @Minutes AS INT) AS
-BEGIN
-
-	SET NOCOUNT ON
-
-	SELECT P.ProductCode,
-	       PP.Price
-	  FROM dbo.Products P
- LEFT JOIN dbo.ProductPrices PP ON P.ID = PP.ProductID AND PP.Minutes = @Minutes
-	 WHERE P.ProductCode = @ProductCode
-END
 GO
 
 CREATE PROCEDURE dbo.usp_CreateAccount(@AccountNumber		UNIQUEIDENTIFIER,

@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using ShareTradingAPI.ViewModels;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ShareTradingAPI.DataAccess
 {
     public interface IProductsQuery
     {
-        Task<IEnumerable<string>> Evaluate();
+        Task<Product[]> Evaluate();
     }
 }

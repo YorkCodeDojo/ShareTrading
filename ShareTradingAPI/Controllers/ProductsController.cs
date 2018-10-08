@@ -22,19 +22,19 @@ namespace ShareTradingAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> Get()
+        public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
-            return (await _productsQuery.Evaluate()).ToArray();
+            return (await _productsQuery.Evaluate());
         }
 
         [HttpGet("{ProductCode}")]
-        public async Task<ActionResult<Product>> GetProduct(string ProductCode)
+        public async Task<ActionResult<Price>> GetProduct(string ProductCode)
         {
-            var currentPrice = await _currentPriceQuery.Evaluate(ProductCode, 0);
-            if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.ProductDoesNotExist) return NotFound("Product does not exist");
-            if (currentPrice == DataAccess.SQLServer.CurrentPriceQuery.ErrorConditions.PriceDoesNotExist) return BadRequest("No valid price");
+            var currentPrice = await _currentPriceQuery.Evaluate(ProductCode);
+            if (currentPrice == DataAccess.CurrentPriceQuery.ErrorConditions.ProductDoesNotExist) return NotFound("Product does not exist");
+            if (currentPrice == DataAccess.CurrentPriceQuery.ErrorConditions.PriceDoesNotExist) return BadRequest("No valid price");
 
-            return new Product()
+            return new Price()
             {
                 Time = DateTime.Now,
                 CurrentUnitCost = currentPrice,

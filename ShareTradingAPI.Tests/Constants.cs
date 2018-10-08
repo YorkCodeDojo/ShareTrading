@@ -6,6 +6,7 @@
         public const string ProductA = "ProductA";
         public const string ProductB = "ProductB";
         public const string ProductC = "ProductC";
+        public const string ProductD = "ProductD";
         public const int QuantityPurchased = 10;
         public const int QuantitySold = 4;
     }
