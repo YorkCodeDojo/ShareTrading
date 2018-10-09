@@ -6,11 +6,21 @@
     <UserSecretsId>da32eba2-c049-4146-a71b-b08f6fc63a32</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.1\ShareTradingAPI.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.1\ShareTradingAPI.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
+    <None Remove="Pricing\ProductC - Copy.txt" />
     <None Remove="Pricing\ProductC.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Pricing\ProductC - Copy.txt" />
     <EmbeddedResource Include="Pricing\ProductC.txt" />
   </ItemGroup>
 

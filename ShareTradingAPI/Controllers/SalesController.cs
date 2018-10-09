@@ -22,6 +22,12 @@ namespace ShareTradingAPI.Controllers
             _storeTransactionAction = storeTransactionAction;
         }
 
+
+        /// <summary>
+        /// Sells shares in a product,  check the returned transaction to see if sale was successfull.
+        /// </summary>
+        /// <param name="sellRequest"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<Sale>> Sell([FromBody] SellRequest sellRequest)
         {

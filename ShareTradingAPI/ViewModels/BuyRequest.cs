@@ -12,6 +12,9 @@ namespace ShareTradingAPI.ViewModels
         [Range(0, int.MaxValue)]
         public int Quantity { get; set; }
 
+        /// <summary>
+        /// Most you are willing to pay
+        /// </summary>
         [Range(0, int.MaxValue)]
         public int MaxUnitPrice { get; set; }
     }

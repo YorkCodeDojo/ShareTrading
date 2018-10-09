@@ -9,6 +9,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareTradingAPI.Tests", "ShareTradingAPI.Tests\ShareTradingAPI.Tests.csproj", "{B0891F8A-5FD4-4018-9048-21B17404CDD4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareTradingExample_CSharp", "Examples\ShareTradingExample_CSharp\ShareTradingExample_CSharp.csproj", "{5850F69F-07A1-47B2-92E7-8B875675143D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B0891F8A-5FD4-4018-9048-21B17404CDD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0891F8A-5FD4-4018-9048-21B17404CDD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0891F8A-5FD4-4018-9048-21B17404CDD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5850F69F-07A1-47B2-92E7-8B875675143D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5850F69F-07A1-47B2-92E7-8B875675143D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5850F69F-07A1-47B2-92E7-8B875675143D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5850F69F-07A1-47B2-92E7-8B875675143D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

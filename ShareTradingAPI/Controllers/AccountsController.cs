@@ -22,6 +22,11 @@ namespace ShareTradingAPI.Controllers
             _transactionQuery = transactionQuery;
         }
 
+        /// <summary>
+        /// Gets the details and balance of an account
+        /// </summary>
+        /// <param name="accountNumber"></param>
+        /// <returns></returns>
         [HttpGet("{accountNumber}")]
         public async Task<ActionResult<AccountDetails>> Get(Guid accountNumber)
         {
@@ -31,12 +36,24 @@ namespace ShareTradingAPI.Controllers
             return account;
         }
 
+
+        /// <summary>
+        /// Gets all the transactions for an account
+        /// </summary>
+        /// <param name="accountNumber"></param>
+        /// <returns></returns>
         [HttpGet("{accountNumber}/Transactions")]
         public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions(Guid accountNumber)
         {
             return await _transactionQuery.Evaluate(accountNumber);
         }
 
+
+        /// <summary>
+        /// Creates a new account.  Take note of the AccountNumber returned,  you will need this!
+        /// </summary>
+        /// <param name="newAccountRequest"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<AccountDetails>> Post(NewAccountRequest newAccountRequest)
         {
