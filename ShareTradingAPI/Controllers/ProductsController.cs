@@ -21,12 +21,22 @@ namespace ShareTradingAPI.Controllers
             _productsQuery = productsQuery;
         }
 
+        /// <summary>
+        /// Gets a list of all the available products
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
             return (await _productsQuery.Evaluate());
         }
 
+
+        /// <summary>
+        /// Gets the current price of a product
+        /// </summary>
+        /// <param name="ProductCode"></param>
+        /// <returns></returns>
         [HttpGet("{ProductCode}")]
         public async Task<ActionResult<Price>> GetProduct(string ProductCode)
         {

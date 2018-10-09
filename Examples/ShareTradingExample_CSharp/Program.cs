@@ -10,7 +10,7 @@ namespace ShareTradingExample
         static async Task Main(string[] args)
         {
             var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:55036");
+            httpClient.BaseAddress = new Uri("https://sharetradingapi.azurewebsites.net");
 
 
             const string account_name = "David Betteridge";
@@ -117,9 +117,6 @@ namespace ShareTradingExample
                 Console.WriteLine($"{item.ID} : {item.ProductCode} {item.Quantity} {item.UnitPrice} {item.TotalValue} {item.Time}");
             }
         }
-
-
-        
 
         private static async Task DisplayAccountDetails(HttpClient httpClient, Guid account_code)
         {
