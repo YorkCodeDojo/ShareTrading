@@ -14,12 +14,14 @@ namespace ShareTradingAPI.Controllers
         readonly IAccountQuery _accountQuery;
         readonly ICreateAccountAction _updateAccountAction;
         readonly ITransactionsForAccountQuery _transactionQuery;
+        readonly IAccountByNameQuery _accountByNameQuery;
 
-        public AccountsController(IAccountQuery accountQuery, ICreateAccountAction updateAccountAction, ITransactionsForAccountQuery transactionQuery)
+        public AccountsController(IAccountQuery accountQuery, ICreateAccountAction updateAccountAction, ITransactionsForAccountQuery transactionQuery, IAccountByNameQuery accountByNameQuery)
         {
             _accountQuery = accountQuery;
             _updateAccountAction = updateAccountAction;
             _transactionQuery = transactionQuery;
+            _accountByNameQuery = accountByNameQuery;
         }
 
         /// <summary>
@@ -57,6 +59,12 @@ namespace ShareTradingAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<AccountDetails>> Post(NewAccountRequest newAccountRequest)
         {
+            var existingAccount = await _accountByNameQuery.Evaluate(newAccountRequest.AccountName);
+            if (existingAccount != null)
+            {
+                return new BadRequestObjectResult($"An account already exists with the name {newAccountRequest.AccountName}, please choose a different name.");
+            }
+
             var account = new AccountDetails()
             {
                 AccountName = newAccountRequest.AccountName,

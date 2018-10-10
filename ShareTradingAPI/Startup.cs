@@ -38,6 +38,7 @@ namespace ShareTradingAPI
             services.AddTransient<DataAccess.IProductsQuery, DataAccess.ProductsQuery>();
             services.AddTransient<DataAccess.ICurrentPriceQuery, DataAccess.CurrentPriceQuery>();
             services.AddTransient<DataAccess.IAccountQuery, DataAccess.SQLServer.AccountQuery>();
+            services.AddTransient<DataAccess.IAccountByNameQuery, DataAccess.SQLServer.AccountByNameQuery>();
             services.AddTransient<DataAccess.ITransactionsForAccountQuery, DataAccess.SQLServer.TransactionsForAccountQuery>();
             services.AddTransient<Pricing.ITimeCalculator, Pricing.DojoTimeCalculator>();
 

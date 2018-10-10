@@ -93,6 +93,19 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE dbo.usp_GetAccountByName(@AccountName	NVARCHAR(100)) AS
+BEGIN
+	
+	SET NOCOUNT ON
+
+   SELECT A.AccountName,
+	      A.AccountNumber,
+		  A.OpeningCash
+	 FROM dbo.Accounts A
+	WHERE A.AccountName = @AccountName
+END
+GO
+
 
 CREATE PROCEDURE dbo.usp_GetTransactionsForAccount(@AccountNumber		UNIQUEIDENTIFIER) AS
 BEGIN

@@ -11,7 +11,8 @@ namespace ShareTradingExample
         {
             var httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri("https://sharetradingapi.azurewebsites.net");
-
+            //httpClient.BaseAddress = new Uri("https://localhost:44334");
+            
 
             const string account_name = "David Betteridge";
             var account_code = await RegisterAccount(httpClient, account_name);
@@ -20,13 +21,13 @@ namespace ShareTradingExample
 
             await DisplayAvailableProducts(httpClient);
 
-            await DisplayProduct(httpClient, "ProductC");
+            await DisplayProduct(httpClient, "ProductA");
 
-            await MakePurchase(httpClient, account_code, "ProductC", 8000, 1);
+            await MakePurchase(httpClient, account_code, "ProductA", 200, 1);
 
             await DisplayAccountDetails(httpClient, account_code);
 
-            await MakeSale(httpClient, account_code, "ProductC", 6000, 1);
+            await MakeSale(httpClient, account_code, "ProductA", 100, 1);
 
             await DisplayAccountDetails(httpClient, account_code);
 
@@ -143,10 +144,14 @@ namespace ShareTradingExample
 
             var response = await httpClient.PostAsJsonAsync("/api/Accounts", requestData);
 
-            response.EnsureSuccessStatusCode();
-            var responseData = await response.Content.ReadAsJsonAsync<AccountDetails>();
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var responseData = await response.Content.ReadAsJsonAsync<AccountDetails>();
 
-            return responseData.AccountNumber;
+                return responseData.AccountNumber;
+            }
+
+            throw new Exception(await response.Content.ReadAsStringAsync());
         }
     }
 }
